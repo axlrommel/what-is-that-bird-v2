@@ -1,0 +1,99 @@
+package com.villagomezdiaz;
+
+import java.io.IOException;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.villagomezdiaz.common.ImageReaderFromRequest;
+import com.villagomezdiaz.common.ds.BirdMatchingResultsSample;
+import com.villagomezdiaz.utilities.ImageComparer;
+
+import redis.clients.jedis.Jedis;
+
+@RestController
+public class BirdLookupController {
+	
+	@Value("${spring.data.redis.repositories.enabled}")
+	private String redisEnabled;
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/JSONServlet2")
+    public void getBirdmatches(@RequestBody String request, HttpServletResponse response) {
+		
+		
+		ObjectMapper mapper = new ObjectMapper();
+		response.setContentType("application/json");
+		response.setHeader("Cache-Control", "nocache");
+        response.setCharacterEncoding("utf-8");
+        ImageComparer comparer = new ImageComparer();
+        Jedis jedis = null;
+        
+		try {			
+			if(redisEnabled.equalsIgnoreCase("TRUE")) {
+				ImageReaderFromRequest img = new ImageReaderFromRequest(request);
+				//BufferedImage i = img.getPayload();
+				jedis = WhatIsThatBirdBootApplication.getPool().getResource();
+				mapper.writeValue(response.getOutputStream(), comparer.getMatchingResults(
+						img.getPayload(), jedis));
+			}
+			else {
+				mapper.writeValue(response.getOutputStream(), BirdMatchingResultsSample.getBirdMatchingResultsSample());
+			}
+
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+	
+
+	@RequestMapping(method = RequestMethod.GET, value = "/InfoServlet")
+	String getBirdList(@RequestParam (value="birds", required=false, defaultValue="bird") String request) {
+		String retval = "Server Error";
+    	Jedis jedis = null;
+        
+        try {
+        	if(redisEnabled.equalsIgnoreCase("TRUE")) {
+	        	jedis = WhatIsThatBirdBootApplication.getPool().getResource();
+	        	StringBuffer listOfBirds = new StringBuffer();
+	        	Set<String> list1 = jedis.smembers("birds");
+	
+	        	for(String l:list1) {
+	        		listOfBirds.append(l + "\n");
+	        	}
+	        	retval = listOfBirds.toString();
+        	}
+        	else {
+        		StringBuffer listOfBirds = new StringBuffer();
+        		listOfBirds.append("cardinal\n");
+        		listOfBirds.append("blue jay\n");
+        		retval = listOfBirds.toString();
+        	}
+        }
+        catch(Exception e) {
+        	e.printStackTrace();
+        }
+		return retval;
+	}
+	
+	public void setRedisEnabled(boolean val) {
+		if(val) {
+			redisEnabled = "true";
+		}
+	}
+}
