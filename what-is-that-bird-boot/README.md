@@ -1,13 +1,17 @@
+See it in action here (older version):
+http://bit.ly/2dWPoh5
+
 System Requirements:
 
 Java 8
 Redis running locally
 
 Instructions:
-Download the source code
+Download the source code from git (you are there already)
 
-navigate to what-is-that-bird-v2/what-is-that-bird-boot and install jar file in your local maven repository.
-jar file can also be found here: http://www.jhlabs.com/ip/filters/index.html
+Install in your local maven repository image filter jar file (http://www.jhlabs.com/ip/filters/index.html)
+
+navigate to what-is-that-bird-v2/what-is-that-bird-boot and run
 
 mvn install:install-file -Dfile=src/main/webapp/WEB-INF/lib/Filters-1.0.jar -DgroupId=ImageFilters -DartifactId=Filters -Dversion=1.0 -Dpackaging=jar
 
@@ -18,6 +22,9 @@ mvn package
 
 run the application:
 java -jar target/demo-0.0.1-SNAPSHOT.jar
+
+navigate to
+http://localhost:8080
 
 questions? send me an email to rommelvillagomez@hotmail.com
 
