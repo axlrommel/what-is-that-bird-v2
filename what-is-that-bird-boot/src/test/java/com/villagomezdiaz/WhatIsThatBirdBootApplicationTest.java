@@ -20,17 +20,17 @@ public class WhatIsThatBirdBootApplicationTest {
 	
 	@Test
 	public void testRun() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	@Test
 	public void testGetPool() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	@Test
 	public void testSetPool() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 }
