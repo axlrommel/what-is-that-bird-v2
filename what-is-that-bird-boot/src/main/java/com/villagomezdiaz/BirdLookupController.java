@@ -64,7 +64,7 @@ public class BirdLookupController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/InfoServlet")
 	String getBirdList(@RequestParam (value="birds", required=false, defaultValue="bird") String request) {
-		String retval = "Server Error";
+		StringBuffer retval = new StringBuffer();
     	Jedis jedis = null;
         
         try {
@@ -72,23 +72,26 @@ public class BirdLookupController {
 	        	jedis = WhatIsThatBirdBootApplication.getPool().getResource();
 	        	StringBuffer listOfBirds = new StringBuffer();
 	        	Set<String> list1 = jedis.smembers("birds");
-	
+				retval.append("<p>Source: <a href=\"http://www.vision.caltech.edu/visipedia/CUB-200-2011.html\">Caltech-UCSD Birds-200-2011</a></p>");
+				retval.append("<p>");
 	        	for(String l:list1) {
-	        		listOfBirds.append(l + "\n");
+	        		listOfBirds.append(l + "</br>");
 	        	}
-	        	retval = listOfBirds.toString();
+	        	retval.append(listOfBirds.toString());
+				retval.append("</p>");
         	}
         	else {
         		StringBuffer listOfBirds = new StringBuffer();
         		listOfBirds.append("cardinal\n");
         		listOfBirds.append("blue jay\n");
-        		retval = listOfBirds.toString();
+        		retval.append(listOfBirds.toString());
         	}
         }
         catch(Exception e) {
         	e.printStackTrace();
+			retval.append("Server Error");
         }
-		return retval;
+		return retval.toString();
 	}
 	
 	public void setRedisEnabled(boolean val) {
