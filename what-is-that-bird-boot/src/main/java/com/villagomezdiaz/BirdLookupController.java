@@ -59,6 +59,9 @@ public class BirdLookupController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		finally {
+			WhatIsThatBirdBootApplication.getPool().returnResourceObject(jedis);
+		}
     }
 	
 
@@ -91,6 +94,9 @@ public class BirdLookupController {
         	e.printStackTrace();
 			retval.append("Server Error");
         }
+		finally {
+			WhatIsThatBirdBootApplication.getPool().returnResourceObject(jedis);
+		}
 		return retval.toString();
 	}
 	
