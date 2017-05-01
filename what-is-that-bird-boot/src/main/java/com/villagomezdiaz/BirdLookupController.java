@@ -60,7 +60,9 @@ public class BirdLookupController {
 			e.printStackTrace();
 		}
 		finally {
-			WhatIsThatBirdBootApplication.getPool().returnResourceObject(jedis);
+			if(redisEnabled.equalsIgnoreCase("TRUE")) {
+				WhatIsThatBirdBootApplication.getPool().returnResourceObject(jedis);
+			}
 		}
     }
 	
@@ -94,7 +96,7 @@ public class BirdLookupController {
         	e.printStackTrace();
 			retval.append("Server Error");
         }
-		finally {
+		if(redisEnabled.equalsIgnoreCase("TRUE")) {
 			WhatIsThatBirdBootApplication.getPool().returnResourceObject(jedis);
 		}
 		return retval.toString();
