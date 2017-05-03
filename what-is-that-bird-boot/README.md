@@ -26,5 +26,22 @@ java -jar target/demo-0.0.1-SNAPSHOT.jar
 navigate to
 http://localhost:8080
 
+
+to run the utilities you cannot really use the spring boot jar,
+you can do the following
+
+mvn compile
+
+cd target/classes
+
+jar -cvf ../whatIsThatBird.jar com
+
+--contents of the jar file
+jar tf ../whatIsThatBird.jar
+
+cd ../..
+
+java -cp target/whatIsThatBird.jar:src/main/webapp/WEB-INF/lib/Filters-1.0.jar com.villagomezdiaz.utilities.BackgroundBlacker
+
 questions? send me an email to rommelvillagomez@hotmail.com
 
