@@ -13,10 +13,10 @@ import com.villagomezdiaz.common.DirectoryScanner;
 
 public class ImageCropper {
 
-	private static String pathIn = "/opt/images";
-	private static String pathOut = "/opt/croppedImages";
-	private static String f1 = "/home/rommel/CUB_200_2011/bounding_boxes.txt";
-	private static String f2 = "/home/rommel/CUB_200_2011/images.txt";
+	private static String pathIn = "/Users/ravill2/birdPhotos/CUB_200_2011/CUB_200_2011/images";
+	private static String pathOut = "/Users/ravill2/birdPhotos/CUB_200_2011/CUB_200_2011/croppedImages";
+	private static String f1 = "/Users/ravill2/birdPhotos/CUB_200_2011/CUB_200_2011/bounding_boxes.txt";
+	private static String f2 = "/Users/ravill2/birdPhotos/CUB_200_2011/CUB_200_2011/images.txt";
 	
 	public static void main(String[] args) {
 		
