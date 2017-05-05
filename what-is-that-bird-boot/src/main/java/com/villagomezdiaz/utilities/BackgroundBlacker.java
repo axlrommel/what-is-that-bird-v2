@@ -31,7 +31,7 @@ public class BackgroundBlacker {
 				 
 				 BufferedImage imageTmp = filter.imageConvertToBlackBackgroundFromAll(imageIn);
 				 
-				 int newHeight = (int)(imageIn.getHeight()*4/5);
+				 int newHeight = (int)(imageIn.getHeight());
 				 BufferedImage imageOut = ImageUtils.getSubimage(imageTmp, 0, 0, imageIn.getWidth(), newHeight);
 				 
 				 String outputPath = pathOut + inputPath.substring(pathIn.length());
