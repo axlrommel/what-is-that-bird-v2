@@ -13,10 +13,10 @@ import com.villagomezdiaz.common.DirectoryScanner;
 public class BackgroundBlacker {
 
 	private static String pathIn = "/Users/ravill2/birdPhotos/CUB_200_2011/CUB_200_2011/croppedImages";
-	private static String pathOut = "/Users/ravill2/birdPhotos/CUB_200_2011/CUB_200_2011/backInBlack";
+	private static String pathOut = "/Users/ravill2/birdPhotos/CUB_200_2011/CUB_200_2011/conversions/backInBlack110";
 	
 	public static void main(String[] args) {
-		final int almostBlack = 100;
+		final int almostBlack = 110;
 		try {
 			DirectoryScanner dirScanner = new DirectoryScanner();
 			 dirScanner.setDirectoryToSearch(pathIn);
@@ -32,7 +32,7 @@ public class BackgroundBlacker {
 				 BufferedImage imageTmp = filter.imageConvertToBlackBackgroundFromAll(imageIn);
 				 
 				 int newHeight = (int)(imageIn.getHeight()*7/8);
-				 BufferedImage imageOut = ImageUtils.getSubimage(imageTmp, 0, 0, imageIn.getWidth(), newHeight);
+				 BufferedImage imageOut = imageTmp.getSubimage(0, 0, imageIn.getWidth(), newHeight);
 				 
 				 String outputPath = pathOut + inputPath.substring(pathIn.length());
 				 File output = new File(outputPath);

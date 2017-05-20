@@ -117,7 +117,7 @@ public BufferedImage imageConvertToBlackBackgroundFromAll(BufferedImage image) {
 	EdgeFilter edgeFilter = new EdgeFilter();
 	
 	BufferedImage imageTmp = null;
-	BufferedImage imageOut = ImageUtils.cloneImage(image);
+	BufferedImage imageOut = image.getSubimage(0, 0, image.getWidth(), image.getHeight());
 	imageTmp = edgeFilter.filter(image, imageTmp);
 	
 	// first pass, let's get rid of the background from the left
