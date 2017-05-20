@@ -13,7 +13,7 @@ import redis.clients.jedis.Jedis;
 
 public class JedisImageListPopulate {
 
-	private static String imageDir = "/opt/blackendImagesAll";
+	private static String imageDir = "/Users/ravill2/birdPhotos/CUB_200_2011/CUB_200_2011/finalBirds";
 	
 	public static void main(String[] args) {
 		//Connecting to Redis server on localhost
