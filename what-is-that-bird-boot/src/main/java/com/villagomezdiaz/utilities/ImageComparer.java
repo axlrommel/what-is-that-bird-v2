@@ -28,8 +28,8 @@ import redis.clients.jedis.ZParams;
 public class ImageComparer {
 
 	static PrintWriter writer = null;
-	static final int maxMatches = 10;
-	static final double threshold = 0.60;
+	static final int maxMatches = 20;
+	static final double threshold = 0.50;
 	//private static String outputHttpPath = "http://localhost/images/input/";
 	//private static String outputSystemPath = "/var/www/html/images/input/";
 	
@@ -84,7 +84,7 @@ public class ImageComparer {
 		
 		 BirdMatchingResults results = new BirdMatchingResults();		
 			 
-		 ColorBlackBackgroundFilter filter = new ColorBlackBackgroundFilter(50);
+		 ColorBlackBackgroundFilter filter = new ColorBlackBackgroundFilter(100);
 		 BufferedImage imageTmp = filter.imageConvertToBlackBackgroundFromAll(imageIn);
 		 
 		 Random rn = new Random();
@@ -92,7 +92,7 @@ public class ImageComparer {
 		 String appendString = Integer.toString(newRn);
 		 
 		 //write temp image
-		 int newHeight = imageTmp.getHeight()*5/6; // discard the bottom 1/6
+		 int newHeight = imageTmp.getHeight()*7/8; // discard the bottom 1/6
 		 BufferedImage imageTmp1 = ImageUtils.getSubimage(imageTmp, 0, 0, imageTmp.getWidth(), newHeight);
 		 ImageStatistics inputStat = new ImageStatistics(imageTmp1);
 		 //System.out.println(inputStat.getTopRedsAsString() + " " + inputStat.getTopGreensAsString() + " " +
@@ -123,7 +123,12 @@ public class ImageComparer {
 
 			 for( JedisCorrelationResults jf : filters) {
 				 if(jf.getCorrelation(corr) >= threshold) {
-					 jedis.zadd(jf.getFilterName(), jf.getCorrelation(corr),list1.get(i));
+					 if(jf.getFilterName().indexOf("threecolor-corr") > 1) {
+						jedis.zadd(jf.getFilterName(), jf.getCorrelation(corr)*1.2,list1.get(i));
+					 }
+					 else {
+					 	jedis.zadd(jf.getFilterName(), jf.getCorrelation(corr),list1.get(i));
+					 }
 				 }
 		     }
 		 }
@@ -140,11 +145,12 @@ public class ImageComparer {
 	     
 	     //can't do unionstore in the for loop to aggregate, we need to do it here, let's get the max
 	     ZParams z = new ZParams();
-	     z.aggregate(ZParams.Aggregate.MAX);
-	     jedis.zunionstore(totalResultsSet , z, appendString + "threecolor-corr", appendString + "high-corr", 
-	    		 appendString + "low-corr", appendString + "red-corr", appendString + "green-corr",
-	    		 appendString + "blue-corr", appendString + "yellow-corr", appendString + "cyan-corr", 
-	    		 appendString + "magenta-corr");
+	     z.aggregate(ZParams.Aggregate.SUM);
+	     jedis.zunionstore(totalResultsSet , z, appendString + "threecolor-corr"
+		  ,appendString + "high-corr", appendString + "low-corr"
+		  , appendString + "red-corr", appendString + "green-corr", appendString + "blue-corr"
+		  , appendString + "yellow-corr", appendString + "cyan-corr", appendString + "magenta-corr"
+				 );
 	     
 	     // let's print out the unique ones and its score
 	     Set<String> qq = jedis.zrevrange(totalResultsSet, 0, -1);
@@ -178,7 +184,7 @@ public class ImageComparer {
 	     }
 	     jedis.del(totalResultsSet);
 
-	    System.out.println(results.toString());
+	    //System.out.println(results.toString());
 		return results;
 		
 	}
